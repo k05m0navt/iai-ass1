@@ -5,14 +5,18 @@
 :- dynamic mask/2.
 :- dynamic home/2.
 :- dynamic best_length_path/1.
-:- dynamic aver_time/1.
 
 size(9).
-aver_time(0).
-best_length_path(inf).
+best_length_path(10000).
 scenario(1).
 have_immunity(0).
 actor_position(1, 1).
+
+covid(6,4).
+covid(1,4).
+doctor(3,3).
+mask(4,7).
+home(7,6).
 
 actor(X, Y, I) :-
     have_immunity(I),
@@ -84,12 +88,8 @@ print_path([[X, Y] | NextSteps]):-
 :- dynamic best_path_backtracking/3.
 best_path_backtracking([], inf, 0).
 
-next_move(CX, CY, NX, NY):-
-    home(XH, YH),
-    DX is sign(XH - CX),
-    DY is sign(YH - CY),
+next_move(CX, CY, NX, NY, I):-
     (
-        (NX is CX + DX, NY is CY + DY);
         (NX is CX, NY is CY + 1);
         (NX is CX + 1, NY is CY + 1);
         (NX is CX + 1, NY is CY);
@@ -99,7 +99,6 @@ next_move(CX, CY, NX, NY):-
         (NX is CX - 1, NY is CY);
         (NX is CX - 1, NY is CY + 1)
     ),
-    have_immunity(I),
     ((I = 0) -> 
         (
             not(covid_zone(NX, NY))
@@ -112,8 +111,7 @@ backtracking_path_rec(X, Y, X, Y, _, _, [[X, Y]], L):-
     best_length_path(BL),
     ((BL > L) -> 
         (
-            retractall(best_length_path(_)), assert(best_length_path(L)),
-            write("L: "), print(L), nl
+            retractall(best_length_path(_)), assert(best_length_path(L))
         );
         true
     ).
@@ -138,42 +136,25 @@ backtracking_path_rec(SX, SY, EX, EY, Immunity, Keep, [[SX, SY] | NextSteps], L)
         true
     ),
 
-    next_move(SX, SY, NX, NY),
-    not(member([NX, NY], Keep)),
-
     have_immunity(I),
+
+
+    next_move(SX, SY, NX, NY, I),
+    not(member([NX, NY], Keep)),
 
     backtracking_path_rec(NX, NY, EX, EY, I, [[SX, SY] | Keep], NextSteps, NL).
 
 test:-
-    %retractall(covid(_, _)), retractall(doctor(_, _)), retractall(mask(_, _)), retractall(home(_, _)),
-    %retractall(best_length_path(_)), assert(best_length_path(inf)),
     %gen_all,
-
-    %assert(covid(8, 3)), assert(covid(8, 6)), assert(doctor(1, 3)), assert(mask(1, 8)), assert(home(1, 10)),
     home(XH, YH),
     (statistics(runtime, [ST|_]), bagof(Path, backtracking_path_rec(1, 1, XH, YH, 0, [[1, 1]], Path, 1), AllPaths),statistics(runtime, [ET|_]), T is (ET - ST) / 1000 -> 
         (
             last(AllPaths, BestBath),
             best_length_path(BL),
-            aver_time(AT),
-            NT is AT + T,
-            retractall(aver_time(_)), assert(aver_time(NT)),
             write("Win!"), nl, nl,
             write("Path: "), nl, print_path(BestBath), nl,
             write("Steps: "), nl, print(BL), nl, nl,
             write("Time: "), nl, print(T), nl
         );
         write("Lose!")
-    ).
-
-av_time(I):-
-    (I > 0 -> 
-        (
-            test,
-            NI is I - 1,
-            av_time(NI)
-        );
-        aver_time(AT),
-        nl, write("Average time: "), print(AT), nl
     ).
