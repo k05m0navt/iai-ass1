@@ -79,13 +79,16 @@ print_path([[X, Y] | NextSteps]):-
 
 %Greedy
 
+% Fact that save path for greedy
 :- dynamic path_greedy/3.
 path_greedy([], inf, 0).
 
-distance_between_two_points(SX, SY, D):-
+% Find distance between home and current position
+distance_to_home(SX, SY, D):-
     home(HX, HY),
     D is sqrt((SX - HX)**2 + (SY - HY)**2).
 
+% Find all distances between possible next moves and home
 min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
     (
     	(NX1 is CX, NY1 is CY + 1),
@@ -93,7 +96,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX1, NY1), not(covid_zone(NX1, NY1)) ->  
                 	(
-                    	distance_between_two_points(NX1, NY1, D1)
+                    	distance_to_home(NX1, NY1, D1)
                     );
                 	D1 is inf
                 )
@@ -104,7 +107,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX1, NY1) ->  
                 	(
-                    	distance_between_two_points(NX1, NY1, D1)
+                    	distance_to_home(NX1, NY1, D1)
                     );
                 	D1 is inf
                 )
@@ -118,7 +121,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX2, NY2), not(covid_zone(NX2, NY2)) ->  
                 	(
-                    	distance_between_two_points(NX2, NY2, D2)
+                    	distance_to_home(NX2, NY2, D2)
                     );
                 	D2 is inf
                 )
@@ -129,7 +132,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX2, NY2) ->  
                 	(
-                    	distance_between_two_points(NX2, NY2, D2)
+                    	distance_to_home(NX2, NY2, D2)
                     );
                 	D2 is inf
                 )
@@ -143,7 +146,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX3, NY3), not(covid_zone(NX3, NY3)) ->  
                 	(
-                    	distance_between_two_points(NX3, NY3, D3)	
+                    	distance_to_home(NX3, NY3, D3)	
                     );
                 	D3 is inf
                 )
@@ -154,7 +157,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX3, NY3) ->  
                 	(
-                    	distance_between_two_points(NX3, NY3, D3)	
+                    	distance_to_home(NX3, NY3, D3)	
                     );
                 	D3 is inf
                 )
@@ -168,7 +171,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX4, NY4), not(covid_zone(NX4, NY4)) ->  
                 	(
-                    	distance_between_two_points(NX4, NY4, D4)	
+                    	distance_to_home(NX4, NY4, D4)	
                     );
                 	D4 is inf
                 )
@@ -179,7 +182,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX4, NY4) ->  
                 	(
-                    	distance_between_two_points(NX4, NY4, D4)	
+                    	distance_to_home(NX4, NY4, D4)	
                     );
                 	D4 is inf
                 )
@@ -193,7 +196,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX5, NY5), not(covid_zone(NX5, NY5)) ->  
                 	(
-                    	distance_between_two_points(NX5, NY5, D5)
+                    	distance_to_home(NX5, NY5, D5)
                     );
                 	D5 is inf
                 )
@@ -204,7 +207,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX5, NY5) ->  
                 	(
-                    	distance_between_two_points(NX5, NY5, D5)
+                    	distance_to_home(NX5, NY5, D5)
                     );
                 	D5 is inf
                 )
@@ -218,7 +221,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX6, NY6), not(covid_zone(NX6, NY6)) ->  
                 	(
-                    	distance_between_two_points(NX6, NY6, D6)
+                    	distance_to_home(NX6, NY6, D6)
                     );
                 	D6 is inf
                 )
@@ -229,7 +232,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX6, NY6) ->  
                 	(
-                    	distance_between_two_points(NX6, NY6, D6)
+                    	distance_to_home(NX6, NY6, D6)
                     );
                 	D6 is inf
                 )
@@ -243,7 +246,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX7, NY7), not(covid_zone(NX7, NY7)) ->  
                 	(
-                    	distance_between_two_points(NX7, NY7, D7)
+                    	distance_to_home(NX7, NY7, D7)
                     );
                 	D7 is inf
                 )
@@ -254,7 +257,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX7, NY7) ->  
                 	(
-                    	distance_between_two_points(NX7, NY7, D7)
+                    	distance_to_home(NX7, NY7, D7)
                     );
                 	D7 is inf
                 )
@@ -268,7 +271,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX8, NY8), not(covid_zone(NX8, NY8)) ->  
                 	(
-                    	distance_between_two_points(NX8, NY8, D8)
+                    	distance_to_home(NX8, NY8, D8)
                     );
                 	D8 is inf
                 )
@@ -279,7 +282,7 @@ min_distance(CX, CY, [D1, D2, D3, D4, D5, D6, D7, D8], I):-
             (
             	(field_zone(NX8, NY8) ->  
                 	(
-                    	distance_between_two_points(NX8, NY8, D8)
+                    	distance_to_home(NX8, NY8, D8)
                     );
                 	D8 is inf
                 )
@@ -307,9 +310,11 @@ next_move(CX, CY, NX, NY, I):-
     ),
     field_zone(NX, NY).
 
+%Base case for greedy recursion
 greedy_algo(X, Y, X, Y, _, _, [[X, Y]], BL):-
-    retractall(best_length_path(_)), assert(best_length_path(BL)).
+    retractall(best_length_path(_)), assert(best_length_path(BL)). % Write lenght of greedy path
 
+% Entry point to greedy recursion
 greedy_algo(SX, SY, EX, EY, Immunity, Keep, [[SX, SY] | NextSteps], L):-
     NL is L + 1,
     retractall(have_immunity(_)), assert(have_immunity(Immunity)),
@@ -332,18 +337,19 @@ greedy_algo(SX, SY, EX, EY, Immunity, Keep, [[SX, SY] | NextSteps], L):-
 	
     min_distance(SX, SY, All_D, I),
     
-    min_list(All_D, Min_D),
+    min_list(All_D, Min_D), 
     
     next_move(SX, SY, NX, NY, I),
     
-   	distance_between_two_points(NX, NY, CD),
+   	distance_to_home(NX, NY, CD),
     
-    (Min_D =:= CD),
+    (Min_D =:= CD), % Find next move that have minimum distance to home
     
     not(member([NX, NY], Keep)),
     
     greedy_algo(NX, NY, EX, EY, I, [[SX, SY] | Keep], NextSteps, NL).
-    
+
+% Test rule that generates map and print result 
 test:-
     gen_all,
     home(EX, EY),
